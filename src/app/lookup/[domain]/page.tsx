@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { lookupDomain } from "@/server/lookup";
 import { LookupError } from "@/lib/domain";
 import { SearchForm } from "@/components/search-form";
+import { clientIp, rateLimit } from "@/server/ratelimit";
+import { headers } from "next/headers";
 
 type Props = { params: Promise<{ domain: string }> };
 
@@ -49,10 +51,15 @@ export default async function LookupPage({ params }: Props) {
 
   let report;
   let error: string | null = null;
-  try {
-    report = await lookupDomain(domain);
-  } catch (e) {
-    error = e instanceof LookupError ? e.message : "Lookup failed — upstream servers unreachable";
+  const hdrs = await headers();
+  if (!rateLimit(clientIp(hdrs))) {
+    error = "Rate limit exceeded — slow down and try again in a minute";
+  } else {
+    try {
+      report = await lookupDomain(domain);
+    } catch (e) {
+      error = e instanceof LookupError ? e.message : "Lookup failed — upstream servers unreachable";
+    }
   }
 
   return (

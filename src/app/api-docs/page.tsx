@@ -73,8 +73,8 @@ export default function ApiDocsPage() {
       <section className="mt-10 text-sm text-zinc-500">
         <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Errors & fair use</h2>
         <p className="mt-2">
-          <code className="font-mono">400</code> invalid domain · <code className="font-mono">502</code> upstream failure.
-          Be reasonable — the service caches aggressively, but please don&apos;t hammer <code className="font-mono">?fresh=1</code>.
+          <code className="font-mono">400</code> invalid domain · <code className="font-mono">429</code> rate limited (30 req/min per IP) ·{" "}
+          <code className="font-mono">502</code> upstream failure. <code className="font-mono">?fresh=1</code> re-fetches at most once per domain per 5 minutes.
           Machine-readable spec:{" "}
           <a href="/openapi.json" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">/openapi.json</a>
           {" · "}

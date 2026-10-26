@@ -88,7 +88,15 @@ filter), `limit` (default 50).
 ## Errors
 
 - `400 { "error": "<CODE>", "message": "…" }` — invalid/normalization failure
+- `429 { "error": "RATE_LIMITED" }` — over 30 req/min per IP
 - `502 { "error": "LOOKUP_FAILED" }` / `HISTORY_FAILED` — upstream unreachable
+
+## Fair use
+
+- 30 requests/minute per IP. `?fresh=1` live re-fetches at most once per
+  domain per 5 minutes — a fresh request inside the cooldown serves cache.
+- Stored snapshots have registrant contact channels (email/phone/address)
+  stripped — history is public registration data only.
 
 ## Pages
 

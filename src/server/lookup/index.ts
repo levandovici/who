@@ -24,6 +24,26 @@ const ttl = {
 
 const TIMEOUT_MS = Number(process.env.LOOKUP_TIMEOUT_MS ?? 10_000);
 
+// Minimum interval between forced live re-fetches of the same domain —
+// keeps ?fresh=1 from hammering upstream registries.
+const FRESH_COOLDOWN_MS = 5 * MIN;
+
+// Contact channels are personal data we don't need to keep in history —
+// WHOIS is largely redacted already, but some ccTLDs still expose them.
+const CONTACT_KEYS = new Set(["email", "emails", "tel", "fax", "voice", "address", "adr", "postalcode", "postal_code"]);
+
+function stripContacts(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripContacts);
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (!CONTACT_KEYS.has(k.toLowerCase())) out[k] = stripContacts(v);
+    }
+    return out;
+  }
+  return value;
+}
+
 export type RegistrationResult = RdapResult | WhoisResult;
 
 export type DomainReport = {
@@ -49,6 +69,7 @@ async function cachedSnapshot(domainId: string, kind: LookupKind) {
 
 /** Persist a fetched payload: extend TTL if unchanged, append snapshot if changed. */
 async function persistSnapshot(domainId: string, kind: LookupKind, source: string, payload: unknown) {
+  payload = stripContacts(payload);
   const hash = sha256(payload);
   const ttlUntil = new Date(ttl[kind]());
 
@@ -83,6 +104,15 @@ export async function lookupDomain(input: string, opts: { fresh?: boolean } = {}
     create: { name, tld },
     update: {},
   });
+
+  if (opts.fresh) {
+    const last = await prisma.lookupSnapshot.findFirst({
+      where: { domainId: domainRow.id },
+      orderBy: { fetchedAt: "desc" },
+      select: { fetchedAt: true },
+    });
+    if (last && Date.now() - last.fetchedAt.getTime() < FRESH_COOLDOWN_MS) opts = {};
+  }
 
   let cached = true;
   let registration: RegistrationResult | null;
