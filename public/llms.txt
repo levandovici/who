@@ -1,0 +1,41 @@
+# who.michitai.com
+
+> Free domain intelligence: WHOIS/RDAP registration data, live DNS records and
+> IP network intelligence for any domain — with cached, hash-deduped history.
+> No account, no API key. Copyright (c) 2026 Nichita Levandovici.
+> All rights reserved.
+
+Author: Nichita Levandovici (MICHITAI)
+Contact: support@michitai.com
+
+## Endpoints (all public, GET-only)
+
+- `GET /api/lookup/{domain}` — full report: registration (RDAP first, WHOIS
+  port-43 fallback), DNS (A/AAAA/MX/NS/CNAME/TXT/CAA/SOA), IP intelligence
+  (PTR, network, origin ASN). `?fresh=1` bypasses cache.
+- `GET /api/lookup/{domain}/history` — append-only snapshots.
+  `?kind=registration|dns|ip`, `?limit=N` (default 50).
+- `GET /lookup/{domain}` — human-readable report page.
+
+## Machine-readable
+
+- [OpenAPI 3.0 spec](https://who.michitai.com/openapi.json): endpoints,
+  parameters and response schemas
+- [Full reference](https://who.michitai.com/llms-full.txt): complete docs in
+  one file — response shapes, caching semantics, error catalogue
+
+## Behavior notes
+
+- Domains are normalized to lowercase punycode (IDN-safe) before lookup.
+- Results are cached: registration/IP 24h, DNS ~30min. Identical payloads
+  extend the snapshot TTL in place — history rows mean real changes.
+- Errors: 400 invalid domain, 502 upstream failure.
+- Fair use: no key required — please don't hammer `?fresh=1`.
+
+## Pages
+
+- [Home](https://who.michitai.com/) — lookup UI
+- [API docs](https://who.michitai.com/api-docs)
+- [FAQ](https://who.michitai.com/faq)
+- [Guides](https://who.michitai.com/guides): what-is-whois, what-is-rdap, what-is-dns
+- [About](https://who.michitai.com/about)

@@ -1,0 +1,97 @@
+# who.michitai.com — complete reference
+
+Free domain intelligence service by Michitai. Looks up domain registration
+(WHOIS/RDAP), live DNS records and IP network intelligence, and keeps an
+append-only history of every observed change. Free, no account, no API key.
+Copyright (c) 2026 Nichita Levandovici (MICHITAI). All rights reserved.
+Contact: support@michitai.com
+
+Base URL: https://who.michitai.com
+
+## Endpoints
+
+### GET /api/lookup/{domain}
+
+Full domain report. `{domain}` may be a Unicode name — it is normalized to
+lowercase punycode. Query params: `fresh=1` forces live re-fetch (bypasses cache).
+
+Response 200 — DomainReport:
+
+```json
+{
+  "domain": "example.com",
+  "tld": "com",
+  "checkedAt": "2026-10-26T16:21:59.658Z",
+  "cached": false,
+  "registration": {
+    "source": "rdap",
+    "server": "https://rdap.verisign.com/com/v1/",
+    "domain": "EXAMPLE.COM",
+    "registered": true,
+    "handle": "2336799_DOMAIN_COM-VRSN",
+    "registrar": { "name": "RESERVED-IANA", "ianaId": "376" },
+    "statuses": ["client delete prohibited"],
+    "events": [
+      { "action": "registration", "date": "1995-08-14T04:00:00Z" },
+      { "action": "expiration", "date": "2027-08-13T04:00:00Z" }
+    ],
+    "nameservers": ["a.iana-servers.net", "b.iana-servers.net"],
+    "dnssec": "delegationSigned",
+    "entities": [{ "roles": ["registrar"], "name": "...", "handle": "..." }]
+  },
+  "dns": {
+    "a": ["23.192.228.80"],
+    "aaaa": [],
+    "mx": [{ "priority": 0, "exchange": "mail.example.com" }],
+    "ns": ["a.iana-servers.net"],
+    "cname": [],
+    "txt": ["v=spf1 -all"],
+    "caa": [],
+    "soa": { "nsname": "ns.icann.org", "serial": 2026102601 }
+  },
+  "ip": {
+    "ips": [
+      {
+        "ip": "23.192.228.80",
+        "ptr": "a23-192-228-80.deploy.static.akamaitechnologies.com",
+        "network": { "name": "AKAMAI", "org": "Akamai Technologies", "country": "US" },
+        "asn": { "asn": 20940, "asName": "AKAMAI-ASN1", "prefix": "23.192.0.0/11" }
+      }
+    ]
+  }
+}
+```
+
+- `registration` is `null` when neither RDAP nor WHOIS has data for the TLD;
+  for WHOIS-only TLDs the shape is similar with `source: "whois"`.
+- `registered: false` in a registration result means the domain appears available.
+
+### GET /api/lookup/{domain}/history
+
+Snapshot history, newest first. Params: `kind=registration|dns|ip` (optional
+filter), `limit` (default 50).
+
+```json
+{ "domain": "example.com", "snapshots": [
+  { "id": "...", "domainId": "...", "kind": "REGISTRATION",
+    "source": "rdap:https://rdap.verisign.com", "payload": { "...": "..." },
+    "hash": "sha256…", "fetchedAt": "…", "ttlUntil": "…" }
+] }
+```
+
+## Caching semantics
+
+- Registration and IP snapshots are fresh for ~24h; DNS for ~30min.
+- On re-fetch, an identical payload (sha256 match) extends `ttlUntil` on the
+  existing snapshot — history rows therefore represent real changes only.
+
+## Errors
+
+- `400 { "error": "<CODE>", "message": "…" }` — invalid/normalization failure
+- `502 { "error": "LOOKUP_FAILED" }` / `HISTORY_FAILED` — upstream unreachable
+
+## Pages
+
+- `/` — lookup UI · `/api-docs` — this API · `/faq` · `/guides`
+  (what-is-whois, what-is-rdap, what-is-dns) · `/about`
+- `/openapi.json` — OpenAPI 3.0 spec · `/llms.txt` — index · `/sitemap.xml`

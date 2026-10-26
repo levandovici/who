@@ -1,0 +1,20 @@
+services:
+  db:
+    image: mongo:8.0
+    container_name: who-mongo
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      # Initiate the single-node replica set on first boot; no-op afterwards.
+      # Member host must be "localhost" so the driver can reach it from the host machine.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch(e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+
+volumes:
+  mongo_data:

@@ -1,0 +1,9 @@
+/* who.michitai.com */
+/* Domain intelligence — WHOIS/RDAP, DNS and IP lookups with history. */
+
+Made by: Nichita Levandovici (MICHITAI)
+Contact: support@michitai.com
+Copyright: (c) 2026 Nichita Levandovici. All rights reserved.
+
+Stack: Next.js 16, TypeScript, Tailwind 4, Prisma 6, MongoDB.
+Machine-readable: /llms.txt, /llms-full.txt, /openapi.json

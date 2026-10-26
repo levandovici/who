@@ -1,0 +1,237 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "who — domain intelligence API",
+    "version": "0.1.0",
+    "description": "Free, key-less domain lookup: WHOIS/RDAP registration, live DNS records and IP intelligence, with append-only change history.",
+    "license": { "name": "Proprietary" }
+  },
+  "servers": [{ "url": "https://who.michitai.com" }],
+  "paths": {
+    "/api/lookup/{domain}": {
+      "get": {
+        "operationId": "lookupDomain",
+        "summary": "Full domain report",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Domain name; Unicode names are normalized to punycode."
+          },
+          {
+            "name": "fresh",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["1"] },
+            "description": "Bypass cache and re-fetch live."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Domain report",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DomainReport" } } }
+          },
+          "400": { "description": "Invalid domain", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "502": { "description": "Upstream failure", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
+    "/api/lookup/{domain}/history": {
+      "get": {
+        "operationId": "domainHistory",
+        "summary": "Snapshot history",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["registration", "dns", "ip"] },
+            "description": "Filter by snapshot kind (case-insensitive)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 50 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot list, newest first",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HistoryResponse" } } }
+          },
+          "400": { "description": "Invalid domain", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "502": { "description": "Upstream failure", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      },
+      "DomainReport": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "tld": { "type": "string" },
+          "checkedAt": { "type": "string", "format": "date-time" },
+          "cached": { "type": "boolean" },
+          "registration": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/Registration" },
+              { "type": "null" }
+            ]
+          },
+          "dns": { "$ref": "#/components/schemas/DnsResult" },
+          "ip": { "$ref": "#/components/schemas/IpResult" }
+        }
+      },
+      "Registration": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string", "enum": ["rdap", "whois"] },
+          "server": { "type": "string" },
+          "domain": { "type": "string" },
+          "registered": { "type": "boolean" },
+          "handle": { "type": "string" },
+          "registrar": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "properties": { "name": { "type": "string" }, "ianaId": { "type": "string" } }
+              },
+              { "type": "null" }
+            ]
+          },
+          "statuses": { "type": "array", "items": { "type": "string" } },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": { "type": "string" },
+                "date": { "type": "string", "format": "date-time" }
+              }
+            }
+          },
+          "nameservers": { "type": "array", "items": { "type": "string" } },
+          "dnssec": { "type": "string" },
+          "raw": { "type": "string", "description": "Raw WHOIS text (whois source only)" }
+        }
+      },
+      "DnsResult": {
+        "type": "object",
+        "properties": {
+          "a": { "type": "array", "items": { "type": "string" } },
+          "aaaa": { "type": "array", "items": { "type": "string" } },
+          "mx": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": { "priority": { "type": "integer" }, "exchange": { "type": "string" } }
+            }
+          },
+          "ns": { "type": "array", "items": { "type": "string" } },
+          "cname": { "type": "array", "items": { "type": "string" } },
+          "txt": { "type": "array", "items": { "type": "string" } },
+          "caa": { "type": "array", "items": { "type": "string" } },
+          "soa": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "nsname": { "type": "string" },
+                  "hostmaster": { "type": "string" },
+                  "serial": { "type": "integer" },
+                  "refresh": { "type": "integer" },
+                  "retry": { "type": "integer" },
+                  "expire": { "type": "integer" },
+                  "minttl": { "type": "integer" }
+                }
+              },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "IpResult": {
+        "type": "object",
+        "properties": {
+          "ips": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/IpEntry" }
+          }
+        }
+      },
+      "IpEntry": {
+        "type": "object",
+        "properties": {
+          "ip": { "type": "string" },
+          "ptr": { "type": ["string", "null"] },
+          "network": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "org": { "type": "string" },
+                  "country": { "type": "string" },
+                  "range": { "type": "string" }
+                }
+              },
+              { "type": "null" }
+            ]
+          },
+          "asn": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "asn": { "type": "integer" },
+                  "asName": { "type": "string" },
+                  "prefix": { "type": "string" }
+                }
+              },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "HistoryResponse": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "snapshots": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Snapshot" }
+          }
+        }
+      },
+      "Snapshot": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "domainId": { "type": "string" },
+          "kind": { "type": "string", "enum": ["REGISTRATION", "DNS", "IP"] },
+          "source": { "type": "string" },
+          "payload": { "type": "object" },
+          "hash": { "type": "string" },
+          "fetchedAt": { "type": "string", "format": "date-time" },
+          "ttlUntil": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}
