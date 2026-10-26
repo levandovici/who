@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     description: SITE.description,
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: `${SITE.name} — free WHOIS & DNS domain lookup` }],
   },
   twitter: {
     card: "summary_large_image",
