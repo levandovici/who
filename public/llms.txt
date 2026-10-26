@@ -39,3 +39,8 @@ Contact: support@michitai.com
 - [FAQ](https://who.michitai.com/faq)
 - [Guides](https://who.michitai.com/guides): what-is-whois, what-is-rdap, what-is-dns
 - [About](https://who.michitai.com/about)
+
+## Legal
+
+- [Privacy Policy](https://who.michitai.com/privacy) — no cookies, no accounts, no tracking
+- [Terms of Service](https://who.michitai.com/terms)

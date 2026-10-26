@@ -10,6 +10,8 @@ export function SiteFooter() {
             {n.label}
           </Link>
         ))}
+        <Link href="/privacy" className="hover:text-zinc-900 dark:hover:text-zinc-200">Privacy</Link>
+        <Link href="/terms" className="hover:text-zinc-900 dark:hover:text-zinc-200">Terms</Link>
         <a href="/llms.txt" className="hover:text-zinc-900 dark:hover:text-zinc-200">llms.txt</a>
         <a href="/openapi.json" className="hover:text-zinc-900 dark:hover:text-zinc-200">openapi.json</a>
         <span className="ml-auto">&copy; {new Date().getFullYear()} {SITE.brand} &middot; Made by {SITE.author}</span>
