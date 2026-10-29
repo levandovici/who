@@ -36,6 +36,16 @@ export default function WhatIsRdapPage() {
           <code>.io</code> to <code>rdap.nic.io</code>, and so on. We cache that map for
           24 hours and route each query to the right registry automatically.
         </p>
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">RDAP vs WHOIS in one look</h2>
+        <p>
+          WHOIS answers over raw TCP port 43 with unstructured text whose layout differs per registry;
+          RDAP answers over HTTPS with a JSON schema where <code>events</code>,{" "}
+          <code>status</code>, <code>entities</code> and <code>nameservers</code> are always in the same
+          place. WHOIS has no standard error format and no access tiers; RDAP defines proper HTTP status
+          codes and supports differentiated access for accredited requesters. For anything automated —
+          monitoring, fraud detection, research — RDAP is strictly better, which is why registries are
+          steadily migrating.
+        </p>
         <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">In practice</h2>
         <p>
           Our lookup queries RDAP first. If a TLD has no RDAP service (some ccTLDs still

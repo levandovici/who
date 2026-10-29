@@ -39,6 +39,15 @@ export default function WhatIsDnsPage() {
             </div>
           ))}
         </dl>
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">TTLs and propagation</h2>
+        <p>
+          Every record carries a TTL — the number of seconds resolvers may cache it. A low TTL means a
+          change propagates within minutes; a high one can pin stale answers for a day or more. That is
+          why a domain can resolve correctly for you and incorrectly for someone else during a migration:
+          their resolver still holds the old answer. When our report disagrees with what you see locally,
+          a stale cache is almost always the explanation — retry with{" "}
+          <code className="font-mono">?fresh=1</code> or wait for the TTL to expire.
+        </p>
         <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">What records reveal</h2>
         <p>
           DNS data tells you far more than an IP. NS records show who operates the zone

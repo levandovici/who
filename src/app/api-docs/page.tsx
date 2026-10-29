@@ -71,6 +71,26 @@ export default function ApiDocsPage() {
       </section>
 
       <section className="mt-10 text-sm text-zinc-500">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Response shape</h2>
+        <p className="mt-2">
+          Every lookup returns one JSON object with the same top-level fields:{" "}
+          <code className="font-mono">domain</code> and <code className="font-mono">tld</code> identify the query,{" "}
+          <code className="font-mono">checkedAt</code> is the fetch timestamp and{" "}
+          <code className="font-mono">cached</code> tells you whether the answer came from the content-hash
+          cache. The <code className="font-mono">registration</code> section reports which source answered
+          (RDAP or WHOIS), the registrar, lifecycle events such as creation and expiration, status codes
+          and nameservers. The <code className="font-mono">dns</code> section carries the resolved record sets —
+          A, AAAA, MX, NS, CNAME, TXT, CAA and SOA — and the <code className="font-mono">ip</code> section
+          enriches every address with PTR, the owning network and the originating ASN.
+        </p>
+        <p className="mt-3">
+          History responses are lists of snapshots in reverse chronological order. Each entry records when
+          the payload was first seen, and identical payloads never create duplicates — a long gap between
+          entries simply means nothing observable changed in between.
+        </p>
+      </section>
+
+      <section className="mt-10 text-sm text-zinc-500">
         <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Errors & fair use</h2>
         <p className="mt-2">
           <code className="font-mono">400</code> invalid domain · <code className="font-mono">429</code> rate limited (30 req/min per IP) ·{" "}

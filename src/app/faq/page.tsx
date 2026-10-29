@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { FAQS } from "@/lib/faq";
 import { SITE } from "@/lib/site";
@@ -36,6 +37,12 @@ export default function FaqPage() {
           </div>
         ))}
       </dl>
+      <p className="mt-10 text-sm text-zinc-500">
+        Want to go deeper? The <Link href="/guides" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">guides</Link> explain
+        WHOIS, RDAP and DNS record types in detail, the <Link href="/api-docs" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">API docs</Link> cover
+        the free JSON endpoints, and the <Link href="/about" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">about page</Link> describes
+        how the lookup engine and snapshot history work behind the scenes.
+      </p>
     </main>
   );
 }

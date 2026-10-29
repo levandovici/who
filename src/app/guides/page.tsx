@@ -45,6 +45,31 @@ export default function GuidesPage() {
           </Link>
         ))}
       </div>
+
+      <section className="mt-16 flex flex-col gap-5 text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">How to read a lookup report</h2>
+        <p>
+          Every report on this site answers three separate questions, and the guides above map to them
+          one-to-one. <strong className="text-zinc-900 dark:text-zinc-100">Registration</strong> tells you who
+          controls the domain: the registrar that sold it, when it was created, when it expires and which
+          status codes restrict transfers. That data comes from WHOIS or its modern successor RDAP — the
+          first two guides explain the difference and why it matters for parsing.
+        </p>
+        <p>
+          <strong className="text-zinc-900 dark:text-zinc-100">DNS records</strong> tell you where the domain
+          actually points: the IP addresses serving it, the servers accepting its email, the nameservers
+          hosting its zone and the policies guarding its certificates. Reading A, MX, NS and TXT records
+          together usually reveals a domain&apos;s entire hosting stack — the DNS guide decodes each record
+          type.
+        </p>
+        <p>
+          Finally, <strong className="text-zinc-900 dark:text-zinc-100">IP intelligence</strong> connects the
+          two worlds: reverse DNS names, the network that owns each prefix and the autonomous system
+          announcing it. Combined with the snapshot history — a permanent record of every observable change —
+          these three layers are enough to investigate a suspicious domain, verify a migration or simply
+          check whether a name is still available.
+        </p>
+      </section>
     </main>
   );
 }

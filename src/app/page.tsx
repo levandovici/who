@@ -45,7 +45,13 @@ export default function Home() {
             applicationCategory: "DeveloperApplication",
             operatingSystem: "any",
             description: SITE.description,
-            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+              priceValidUntil: "2030-12-31",
+              availability: "https://schema.org/InStock",
+            },
           },
         ]}
       />
@@ -53,6 +59,12 @@ export default function Home() {
       <h1 className="text-center text-4xl font-semibold tracking-tight">Domain Lookup</h1>
       <p className="mt-3 text-center text-zinc-500">
         Free WHOIS, DNS and IP intelligence for any domain — no account needed.
+      </p>
+      <p className="mt-4 max-w-2xl text-center text-sm text-zinc-500">
+        Type any domain below and get its registration record, live DNS configuration
+        and the network behind its IP addresses in a single report. Results are cached
+        by content hash, and every observable change is kept as a permanent snapshot —
+        so you can watch a domain evolve, not just inspect it once.
       </p>
       <div className="mt-8 flex w-full justify-center">
         <SearchForm autoFocus />

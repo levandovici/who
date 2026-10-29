@@ -191,6 +191,32 @@ export default async function LookupPage({ params }: Props) {
           </Card>
         </div>
       ) : null}
+
+      <section className="mt-12 rounded-xl border border-zinc-200 p-6 text-sm text-zinc-500 dark:border-zinc-800">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">How to read this report</h2>
+        <p className="mt-3">
+          The registration card shows who controls the domain: the registrar that sold it, creation and
+          expiry dates, status codes such as <code className="font-mono">clientTransferProhibited</code>,
+          and the delegated nameservers. Data comes from RDAP first, with classic WHOIS over port 43 as a
+          fallback — the source badge tells you which path answered.
+        </p>
+        <p className="mt-3">
+          The DNS card is the live record set. A and AAAA are the addresses the site is served from; MX
+          reveals the mail provider; NS shows who operates the zone; TXT exposes SPF policies and
+          verification tokens; CAA lists which certificate authorities may issue for the domain; SOA is
+          the zone&apos;s serial and refresh timers.
+        </p>
+        <p className="mt-3">
+          IP intelligence enriches each resolved address with its PTR name, the organization owning the
+          network prefix and the originating autonomous system — the difference between a registrar of
+          record and whoever actually hosts the infrastructure. Every observable change is kept as a
+          permanent snapshot, so revisiting this page shows how the domain evolves over time.
+        </p>
+        <p className="mt-3">
+          New here? Read the <Link href="/guides" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">guides</Link>
+          {" "}or use the <Link href="/api-docs" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">free JSON API</Link>.
+        </p>
+      </section>
     </main>
   );
 }

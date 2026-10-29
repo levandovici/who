@@ -35,6 +35,16 @@ export default function WhatIsWhoisPage() {
           TLD&apos;s own WHOIS service. Thin registries like <code>.com</code> may even refer
           onward to the registrar&apos;s WHOIS for full contact detail.
         </p>
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Reading status codes</h2>
+        <p>
+          The most useful WHOIS fields are the status codes.{" "}
+          <code>clientTransferProhibited</code> means the owner locked the domain against transfers;{" "}
+          <code>clientHold</code> means the registrar suspended it — usually for unpaid renewal or a
+          failed verification. After expiry, domains pass through <code>redemptionPeriod</code> and{" "}
+          <code>pendingDelete</code> before they can be registered again, which is why an expired domain
+          can stay unavailable for weeks. Watching the expiry event and these codes together is the
+          standard way to track a domain you want to acquire.
+        </p>
         <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Where it falls short</h2>
         <p>
           WHOIS returns unstructured plain text, and every registry formats it differently —

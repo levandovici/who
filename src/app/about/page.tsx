@@ -30,6 +30,30 @@ export default function AboutPage() {
           stays fast, never spams upstream servers, and builds a genuine history of how a domain
           changes over time.
         </p>
+        <h2 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-zinc-100">What a report includes</h2>
+        <p>
+          Every lookup produces three sections. <strong className="text-zinc-900 dark:text-zinc-100">Registration</strong> shows
+          the registrar, creation and expiry dates, status codes and delegated nameservers — the
+          same fields a WHOIS record carries, parsed into a consistent shape.{" "}
+          <strong className="text-zinc-900 dark:text-zinc-100">DNS</strong> resolves the live record set:
+          A and AAAA addresses, MX mail exchangers, NS, CNAME, TXT policies, CAA and SOA.{" "}
+          <strong className="text-zinc-900 dark:text-zinc-100">IP intelligence</strong> enriches each
+          address with its PTR record, the network that owns the prefix and the originating
+          autonomous system, so you can see who actually hosts a domain — not just who registered it.
+        </p>
+        <h2 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-zinc-100">History you can trust</h2>
+        <p>
+          Because snapshots are keyed by content hash, a domain that never changes produces no noise,
+          while every real change — a new nameserver, a transferred registrar, an updated SPF policy —
+          creates a permanent history entry. That makes the service useful for watching expiry dates,
+          tracking migrations between providers and investigating suspicious infrastructure.
+        </p>
+        <h2 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-zinc-100">Privacy and fair use</h2>
+        <p>
+          Lookups are anonymous: we do not require an account, we do not track which domains you check,
+          and cached answers mean popular domains are served without repeatedly hammering upstream
+          registries. Rate limits exist only to protect upstream WHOIS and RDAP servers from abuse.
+        </p>
         <p>
           Everything is free with no account. The same data is available as JSON via the{" "}
           <Link href="/api-docs" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">
