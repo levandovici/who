@@ -69,6 +69,12 @@ export default function GuidesPage() {
           these three layers are enough to investigate a suspicious domain, verify a migration or simply
           check whether a name is still available.
         </p>
+        <p>
+          New to the terminology? Start with <Link href="/guides/what-is-whois" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">What is WHOIS?</Link> for
+          the original registration protocol, continue to <Link href="/guides/what-is-rdap" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">What is RDAP?</Link> to
+          see how the modern JSON replacement works, then finish with <Link href="/guides/what-is-dns" className="underline decoration-zinc-300 underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-200">What is DNS?</Link> to
+          decode the record types that appear in every report.
+        </p>
       </section>
     </main>
   );
